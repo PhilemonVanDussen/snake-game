@@ -94,12 +94,23 @@ def main():
                 snake_pos.append(snake_pos[-1])
                 score += 1
             
-            
+            if head_x < 0 or head_x >= config.WINDOW_WIDTH or head_y < 0 or head_y >= config.WINDOW_HEIGHT:
+                running = False
+        
+            for i in range(len(snake_pos)):
+                segment = snake_pos[i]
+                if i == 0:
+                    pygame.draw.rect(screen, (100, 100, 200), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+                    pygame.draw.rect(screen, config.RED, (segment[0] + 1, segment[1] + 1, CELL_SIZE - 2, CELL_SIZE - 2))
+                else: 
+                    pygame.draw.rect(screen, (100, 100, 200), (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+                    pygame.draw.rect(screen, (50, 175, 25), (segment[0] + 1, segment[1] + 1, CELL_SIZE - 2, CELL_SIZE - 2))
+                    
         pygame.display.flip()
-
         # Limit the frame rate to the specified frames per second
         clock.tick(config.FPS) # Use the clock to control the frame rate
-
+        update_snake += 1
+        
     pygame.quit()
     sys.exit()
 
