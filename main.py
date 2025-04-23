@@ -3,39 +3,65 @@
 import pygame
 import sys
 import config # Import the config module
+import random
+from pygame.locals import *
 
 def init_game():
     pygame.init()
-    pygame.font.init
+    pygame.font.init()
     screen = pygame.display.set_mode((config.WINDOW_WIDTH, config.WINDOW_HEIGHT)) # Use constants from config
     pygame.display.set_caption(config.TITLE)
     return screen
 
-def handle_events():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            return False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                return False
-    return True
+# Game variables
+CELL_SIZE = 10
+direction = 1 
+update_snake = 0
+score = 0 
 
+snake_pos = [[int(config.WINDOW_WIDTH / 2), int(config.WINDOW_HEIGHT / 2)]]
+snake_pos.append([int(config.WINDOW_WIDTH / 2), int(config.WINDOW_HEIGHT / 2) + CELL_SIZE])
+snake_pos.append([int(config.WINDOW_WIDTH / 2), int(config.WINDOW_HEIGHT / 2) + CELL_SIZE * 2])
+snake_pos.append([int(config.WINDOW_WIDTH / 2), int(config.WINDOW_HEIGHT / 2) + CELL_SIZE * 3])
 
+# Apple pos
+apple_pos = [random.randint(0, config.WINDOW_WIDTH // CELL_SIZE - 1) * CELL_SIZE, random.randint(0, config.WINDOW_HEIGHT // CELL_SIZE - 1) * CELL_SIZE]
 
+# Font for score
+pygame.font.init()
+font = pygame.font.SysFont(None, 35)
 
+# Background Music
+# pygame.mixer.init()
+# pygame.mixer.music.load('')
+# pygame.mixer.music.set_volume(0.5)
+# pygame.mixer.music.play(-1)
 
+def draw_apple(screen):
+    pygame.draw.rect(screen, config.RED, (apple_pos[0], apple_pos[1], CELL_SIZE, CELL_SIZE))
 
+def draw_score(screen):
+    score_text = font.render(f'Score: {score}', True, config.BLACK)
+    screen.blit(score_text, [10, 10])
+   
 def main():
     screen = init_game()
     clock = pygame.time.Clock() # Initalize the clock here
-
-
-
-
+    
     running = True
     while running:
-        running = handle_events()
-        screen.fill(config.GREEN) # Use color from config
+        screen.fill(config.GREEN) 
+        draw_apple(screen)
+        draw_score(screen)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return False
+                elif event.key == pygame.K_UP and direction != 3:
+                    direction = 1
         
 
 
